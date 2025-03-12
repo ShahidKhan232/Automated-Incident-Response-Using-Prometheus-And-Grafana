@@ -1,0 +1,35 @@
+---
+- name: Memory Usage Cleanup
+  hosts: "{{ target_host }}"
+  become: yes
+  tasks:
+    - name: Get memory usage information
+      shell: "free -m"
+      register: memory_info
+
+    - name: Log memory status
+      debug:
+        msg: "Current memory status:\n{{ memory_info.stdout }}"
+
+    - name: Clear page cache
+      shell: "sync; echo 1 > /proc/sys/vm/drop_caches"
+      
+    - name: Clear swap space
+      shell: "swapoff -a && swapon -a"
+      ignore_errors: yes
+
+    - name: Find and kill memory-hogging processes
+      shell: |
+        for pid in $(ps aux | awk '$4 > 80.0 {print $2}'); do
+          kill -15 $pid
+        done
+      ignore_errors: yes
+
+    - name: Restart memory-intensive services
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      with_items:
+        - mysql
+        - mongodb
+      ignore_errors: yes 

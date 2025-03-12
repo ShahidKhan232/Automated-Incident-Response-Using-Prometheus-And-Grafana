@@ -1,0 +1,36 @@
+---
+- name: System Recovery
+  hosts: "{{ target_host }}"
+  become: yes
+  tasks:
+    - name: Check system uptime
+      shell: "uptime"
+      register: system_uptime
+
+    - name: Log system status
+      debug:
+        msg: "System uptime:\n{{ system_uptime.stdout }}"
+
+    - name: Restart critical services
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      with_items:
+        - sshd
+        - nginx
+        - mysql
+        - docker
+      ignore_errors: yes
+
+    - name: Check system load
+      shell: "top -b -n 1"
+      register: system_load
+
+    - name: Log system load
+      debug:
+        msg: "System load:\n{{ system_load.stdout }}"
+
+    - name: Reboot system if necessary
+      shell: "shutdown -r +1"
+      when: system_load.stdout | regex_search('load average: [0-9]+.[0-9]+') | float > 10
+      ignore_errors: yes 

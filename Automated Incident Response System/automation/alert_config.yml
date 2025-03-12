@@ -1,0 +1,29 @@
+HighCPUUsage:
+  name: HighCPUUsage
+  playbook: ../ansible/playbooks/cpu_mitigation.yml
+  severity: warning
+  description: High CPU usage detected
+
+HighMemoryUsage:
+  name: HighMemoryUsage
+  playbook: ../ansible/playbooks/memory_cleanup.yml
+  severity: warning
+  description: High memory usage detected
+
+LowDiskSpace:
+  name: LowDiskSpace
+  playbook: ../ansible/playbooks/disk_cleanup.yml
+  severity: warning
+  description: Low disk space detected
+
+SystemDown:
+  name: SystemDown
+  playbook: ../ansible/playbooks/system_recovery.yml
+  severity: critical
+  description: System is down
+
+NetworkLatency:
+  name: NetworkLatency
+  playbook: ../ansible/playbooks/network_optimization.yml
+  severity: warning
+  description: High network latency detected 

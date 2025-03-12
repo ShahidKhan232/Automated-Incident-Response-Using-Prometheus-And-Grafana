@@ -1,0 +1,28 @@
+---
+- name: CPU Usage Mitigation for Windows
+  hosts: "{{ target_host }}"
+  gather_facts: no
+
+  tasks:
+    - name: Get top CPU consuming processes
+      win_shell: |
+        Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 | Format-Table Name, CPU, ID
+      register: top_processes
+
+    - name: Log high CPU processes
+      debug:
+        msg: "Top CPU consuming processes:\n{{ top_processes.stdout }}"
+
+    - name: Find and stop processes using excessive CPU
+      win_shell: |
+        Get-Process | Where-Object {$_.CPU -gt 80} | Stop-Process -Force
+      ignore_errors: yes
+
+    - name: Restart Windows services if CPU still high
+      win_service:
+        name: "{{ item }}"
+        state: restarted
+      with_items:
+        - W3SVC
+        - wuauserv
+      ignore_errors: yes 

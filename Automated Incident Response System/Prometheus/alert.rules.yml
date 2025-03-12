@@ -1,0 +1,92 @@
+groups:
+  - name: windows_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: avg by(instance) (rate(windows_cpu_time_total{mode!='idle'}[5m]) * 100) > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage on {{ $labels.instance }}
+          description: "CPU usage is above 80% for more than 1 minute\n Current value: {{ $value }}%"
+
+      - alert: HighMemoryUsage
+        expr: 100 - (100 * windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes) > 85
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage on {{ $labels.instance }}
+          description: "Memory usage is above 85% for more than 1 minute\n Current value: {{ $value }}%"
+
+      - alert: CriticalMemoryUsage
+        expr: 100 - (100 * windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes) > 95
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical memory usage on {{ $labels.instance }}
+          description: "Memory usage is above 95% for more than 1 minute\n Current value: {{ $value }}%"
+
+      - alert: LowDiskSpace
+        expr: 100 * (1 - windows_logical_disk_free_bytes / windows_logical_disk_size_bytes) > 85
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Low disk space on {{ $labels.instance }} volume {{ $labels.volume }}
+          description: "Disk usage is above 85% for more than 1 minute\n Volume: {{ $labels.volume }}\n Current value: {{ $value }}%"
+
+      - alert: CriticalDiskSpace
+        expr: 100 * (1 - windows_logical_disk_free_bytes / windows_logical_disk_size_bytes) > 95
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical disk space on {{ $labels.instance }} volume {{ $labels.volume }}
+          description: "Disk usage is above 95% for more than 1 minute\n Volume: {{ $labels.volume }}\n Current value: {{ $value }}%"
+
+      - alert: SystemDown
+        expr: up{job="windows"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: System down on {{ $labels.instance }}
+          description: "Windows Exporter is not responding for more than 1 minute"
+
+      - alert: HighNetworkErrors
+        expr: rate(windows_net_packets_received_errors_total[5m]) > 100 or rate(windows_net_packets_outbound_errors_total[5m]) > 100
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High network errors on {{ $labels.instance }} interface {{ $labels.nic }}
+          description: "Network interface experiencing high error rate\n Interface: {{ $labels.nic }}\n Current value: {{ $value }} errors/sec"
+
+      - alert: ServiceDown
+        expr: windows_service_state{state="running"} != 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Service down on {{ $labels.instance }}
+          description: "Service {{ $labels.name }} is not running\n State: {{ $labels.state }}"
+
+      - alert: ProcessHighCPU
+        expr: rate(windows_process_cpu_time_total{process!~"idle|system"}[5m]) * 100 > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage by process on {{ $labels.instance }}
+          description: "Process {{ $labels.process }} using high CPU\n Current value: {{ $value }}%"
+
+      - alert: ProcessHighMemory
+        expr: windows_process_private_bytes_total / windows_cs_physical_memory_bytes * 100 > 50
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage by process on {{ $labels.instance }}
+          description: "Process {{ $labels.process }} using high memory\n Current value: {{ $value }}% of total memory"

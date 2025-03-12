@@ -1,0 +1,33 @@
+---
+- name: Disk Space Cleanup
+  hosts: "{{ target_host }}"
+  become: yes
+  tasks:
+    - name: Get disk usage information
+      shell: "df -h"
+      register: disk_info
+
+    - name: Log disk status
+      debug:
+        msg: "Current disk status:\n{{ disk_info.stdout }}"
+
+    - name: Clean apt cache
+      shell: "apt-get clean"
+      ignore_errors: yes
+
+    - name: Remove old log files
+      shell: |
+        find /var/log -type f -name "*.log" -mtime +30 -delete
+        find /var/log -type f -name "*.gz" -mtime +30 -delete
+      ignore_errors: yes
+
+    - name: Clean temp directories
+      shell: |
+        rm -rf /tmp/*
+        rm -rf /var/tmp/*
+      ignore_errors: yes
+
+    - name: Remove old Docker images and containers
+      shell: |
+        docker system prune -af --volumes
+      ignore_errors: yes 

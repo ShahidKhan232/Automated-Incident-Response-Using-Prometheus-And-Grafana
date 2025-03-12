@@ -1,0 +1,48 @@
+# Create and configure .gitignore first
+@"
+# Binary files and installers
+*.exe
+*.msi
+*.zip
+*.tar.gz
+*.dll
+*.so
+*.dylib
+
+# Prometheus data
+prometheus/data/
+prometheus/*.tar.gz
+prometheus/*.zip
+
+# Grafana
+grafana/*.msi
+grafana/data/
+
+# Loki data
+loki/chunks/
+loki/boltdb-shipper-active/
+loki/boltdb-shipper-cache/
+loki/wal/
+loki/compactor/
+
+# Log files
+*.log
+
+# Windows system files
+Thumbs.db
+desktop.ini
+
+# Temporary files
+temp/
+tmp/
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment specific files
+.env
+.env.local
+"@ | Out-File -FilePath .gitignore -Encoding utf8
