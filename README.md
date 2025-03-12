@@ -29,7 +29,7 @@ This project implements an automated incident response system using Prometheus f
 ## Screenshots
 
 ### Dashboard Overview
-![Grafana Dashboard](images/grafana-dashboard.png)
+![Grafana Dashboard](Automated-Incident-Response-System/auto-1.png)
 
 ### Alert Management
 ![Alert Management](images/alert-management.png)
