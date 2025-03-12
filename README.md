@@ -1,5 +1,7 @@
 # Automated Incident Response System Using Prometheus and Grafana
 
+![System Overview](images/system-overview.png)
+
 This project implements an automated incident response system using Prometheus for monitoring, Grafana for visualization, and PowerShell scripts for automated remediation.
 
 ## Features
@@ -11,6 +13,10 @@ This project implements an automated incident response system using Prometheus f
 - Log aggregation with Loki
 - Alert management with AlertManager
 
+## System Architecture
+
+![Architecture Diagram](images/architecture.png)
+
 ## Components
 
 - **Prometheus**: Metrics collection and alerting
@@ -19,6 +25,17 @@ This project implements an automated incident response system using Prometheus f
 - **Loki**: Log aggregation
 - **AlertManager**: Alert routing and management
 - **PowerShell Scripts**: Automated remediation
+
+## Screenshots
+
+### Dashboard Overview
+![Grafana Dashboard](images/grafana-dashboard.png)
+
+### Alert Management
+![Alert Management](images/alert-management.png)
+
+### Log Analysis
+![Log Analysis](images/log-analysis.png)
 
 ## Prerequisites
 
@@ -79,9 +96,13 @@ This project implements an automated incident response system using Prometheus f
 
 4. Access the interfaces:
    - Prometheus: http://localhost:9090
+   ![Prometheus UI](images/prometheus-ui.png)
    - Grafana: http://localhost:3000
+   ![Grafana Login](images/grafana-login.png)
    - AlertManager: http://localhost:9093
+   ![AlertManager UI](images/alertmanager-ui.png)
    - Windows Exporter Metrics: http://localhost:9182/metrics
+   ![Windows Exporter](images/windows-exporter.png)
 
 ## Configuration
 
@@ -97,6 +118,8 @@ Alert rules are defined in `prometheus/alert.rules.yml` and include:
 - Network Errors
 - Service Status
 
+![Alert Rules](images/alert-rules.png)
+
 ### Automated Response
 
 The system automatically responds to alerts by executing appropriate PowerShell scripts:
@@ -106,6 +129,8 @@ The system automatically responds to alerts by executing appropriate PowerShell 
 - System recovery
 - Service restoration
 
+![Automated Response](images/automated-response.png)
+
 ### Dashboards
 
 The Grafana dashboards provide visualization for:
@@ -113,6 +138,18 @@ The Grafana dashboards provide visualization for:
 - Alert status
 - Log aggregation
 - Service health
+
+#### CPU and Memory Dashboard
+![CPU Memory](images/cpu-memory-dashboard.png)
+
+#### Disk Usage Dashboard
+![Disk Usage](images/disk-usage-dashboard.png)
+
+#### Network Traffic Dashboard
+![Network Traffic](images/network-dashboard.png)
+
+#### Logs Dashboard
+![Logs Dashboard](images/logs-dashboard.png)
 
 ## Testing
 
@@ -128,7 +165,7 @@ This provides options to test:
 4. Network Errors
 5. Service Down Scenarios
 
-
+![Test Script](images/test-script.png)
 
 ## Contributing
 
